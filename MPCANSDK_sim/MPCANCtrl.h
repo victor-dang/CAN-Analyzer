@@ -1,155 +1,146 @@
-/*###############################################################################################
-  ƒtƒ@ƒCƒ‹–¼ : MPCANCtrl.h
-  “à—e       : MicroPecker CAN ƒRƒ“ƒgƒ[ƒ‰[ API
-  ƒo[ƒWƒ‡ƒ“ : 1.16
-  ì¬“ú     : 2012/09/21
-  XV“ú     : 2015/07/03
-  ŠJ”­ŠÂ‹«   : C/C++
-  ‚»‚Ì‘¼     : ƒ‰ƒCƒuƒ‰ƒŠƒtƒ@ƒCƒ‹ = Microsoft Visual C++ : MPCANCtrl.lib
-                                    Embarcadero C++ Builder : MPCANCtrl_BCB.lib
-###############################################################################################*/
+
 
 #ifndef MPCANCtrlH
 #define MPCANCtrlH
 
 #include <stdint.h>
 
-/******************** ’è”’è‹` ********************/
+/******************** å®šæ•°å®šç¾© ********************/
 
-/* APIƒR[ƒ‹Œ‹‰Ê */
-#define E_OK       (0) /* ³í                           */
-#define E_PARAM    (1) /* ƒpƒ‰ƒ[ƒ^ˆÙí                 */
-#define E_DEVICE   (2) /* ƒfƒoƒCƒXˆÙí(ƒfƒoƒCƒX‚ª–¢ŒŸo) */
-#define E_COMM     (3) /* USB’ÊMˆÙí                    */
-#define E_TGT      (4) /* ƒ^[ƒQƒbƒgˆÙí                 */
-#define E_SLT_BUSY (5) /* ƒXƒƒbƒgİ’è¸”s               */
-#define E_DCT_FULL (6) /* ƒ_ƒCƒŒƒNƒg‘—MFIFOƒtƒ‹         */
-#define E_STS      (7) /* ó‘ÔˆÙí                       */
-#define E_OTHER    (8) /* •s–¾‚ÈƒGƒ‰[                   */
+/* APIã‚³ãƒ¼ãƒ«çµæœ */
+#define E_OK       (0) /* æ­£å¸¸                           */
+#define E_PARAM    (1) /* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç•°å¸¸                 */
+#define E_DEVICE   (2) /* ãƒ‡ãƒã‚¤ã‚¹ç•°å¸¸(ãƒ‡ãƒã‚¤ã‚¹ãŒæœªæ¤œå‡º) */
+#define E_COMM     (3) /* USBé€šä¿¡ç•°å¸¸                    */
+#define E_TGT      (4) /* ã‚¿ãƒ¼ã‚²ãƒƒãƒˆç•°å¸¸                 */
+#define E_SLT_BUSY (5) /* ã‚¹ãƒ­ãƒƒãƒˆè¨­å®šå¤±æ•—               */
+#define E_DCT_FULL (6) /* ãƒ€ã‚¤ãƒ¬ã‚¯ãƒˆé€ä¿¡FIFOãƒ•ãƒ«         */
+#define E_STS      (7) /* çŠ¶æ…‹ç•°å¸¸                       */
+#define E_OTHER    (8) /* ä¸æ˜ãªã‚¨ãƒ©ãƒ¼                   */
 
-/* ƒXƒe[ƒ^ƒX */
-#define CAN_STATUS_INT     (0) /* ‰Šú‰»ó‘Ô                 */
-#define CAN_STATUS_PARAM   (1) /* ƒpƒ‰ƒ[ƒ^İ’è‘Ò‚¿ó‘Ô     */
-#define CAN_STATUS_WAIT    (2) /* ƒ‚ƒjƒ^ŠJn‘Ò‚¿ó‘Ô         */
-#define CAN_STATUS_SYNC    (3) /* “¯Šú‘Ò‚¿ó‘Ô               */
-#define CAN_STATUS_MON     (4) /* ƒ‚ƒjƒ^ó‘Ô                 */
-#define CAN_STATUS_SIM     (5) /* ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“ƒ‚[ƒhó‘Ô */
-#define CAN_STATUS_UNKNOWN (6) /* •s–¾‚Èó‘Ô                 */
+/* ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ */
+#define CAN_STATUS_INT     (0) /* åˆæœŸåŒ–çŠ¶æ…‹                 */
+#define CAN_STATUS_PARAM   (1) /* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿è¨­å®šå¾…ã¡çŠ¶æ…‹     */
+#define CAN_STATUS_WAIT    (2) /* ãƒ¢ãƒ‹ã‚¿é–‹å§‹å¾…ã¡çŠ¶æ…‹         */
+#define CAN_STATUS_SYNC    (3) /* åŒæœŸå¾…ã¡çŠ¶æ…‹               */
+#define CAN_STATUS_MON     (4) /* ãƒ¢ãƒ‹ã‚¿çŠ¶æ…‹                 */
+#define CAN_STATUS_SIM     (5) /* ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ãƒ¢ãƒ¼ãƒ‰çŠ¶æ…‹ */
+#define CAN_STATUS_UNKNOWN (6) /* ä¸æ˜ãªçŠ¶æ…‹                 */
 
-/* “®ìƒ‚[ƒh */
-#define CAN_MODE_LISTEN  (0) /* ƒŠƒbƒXƒ“ƒIƒ“ƒŠ[ƒ‚[ƒh(Ack‚È‚µ) */
-#define CAN_MODE_MONITOR (1) /* ƒ‚ƒjƒ^ƒ‚[ƒh(Ack‚ ‚è)           */
-#define CAN_MODE_SIM     (2) /* ƒVƒ~ƒ…ƒŒ[ƒVƒ‡ƒ“ƒ‚[ƒh          */
+/* å‹•ä½œãƒ¢ãƒ¼ãƒ‰ */
+#define CAN_MODE_LISTEN  (0) /* ãƒªãƒƒã‚¹ãƒ³ã‚ªãƒ³ãƒªãƒ¼ãƒ¢ãƒ¼ãƒ‰(Ackãªã—) */
+#define CAN_MODE_MONITOR (1) /* ãƒ¢ãƒ‹ã‚¿ãƒ¢ãƒ¼ãƒ‰(Ackã‚ã‚Š)           */
+#define CAN_MODE_SIM     (2) /* ã‚·ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ãƒ¢ãƒ¼ãƒ‰          */
 
-/* ƒŠƒ‚[ƒgƒtƒŒ[ƒ€óM—L–³ */
-#define CAN_REMOTE_DIS (0) /* ƒŠƒ‚[ƒgóM–³                        */
-#define CAN_REMOTE_ENA (1) /* ƒŠƒ‚[ƒgóM‚ ‚è(ƒXƒƒbƒg23/24‚ğè—L) */
+/* ãƒªãƒ¢ãƒ¼ãƒˆãƒ•ãƒ¬ãƒ¼ãƒ å—ä¿¡æœ‰ç„¡ */
+#define CAN_REMOTE_DIS (0) /* ãƒªãƒ¢ãƒ¼ãƒˆå—ä¿¡ç„¡                        */
+#define CAN_REMOTE_ENA (1) /* ãƒªãƒ¢ãƒ¼ãƒˆå—ä¿¡ã‚ã‚Š(ã‚¹ãƒ­ãƒƒãƒˆ23/24ã‚’å æœ‰) */
 
-/* ƒ{[ƒŒ[ƒgİ’è */
+/* ãƒœãƒ¼ãƒ¬ãƒ¼ãƒˆè¨­å®š */
 #define CAN_PARAM_BR_1M   (0) /* 1Mbps   */
 #define CAN_PARAM_BR_500K (1) /* 500kbps */
 #define CAN_PARAM_BR_250K (2) /* 250kbps */
 #define CAN_PARAM_BR_125K (3) /* 125kbps */
 
-/* ƒTƒ“ƒvƒ‹ƒ|ƒCƒ“ƒgİ’è */
+/* ã‚µãƒ³ãƒ—ãƒ«ãƒã‚¤ãƒ³ãƒˆè¨­å®š */
 #define CAN_PARAM_SP_60P (0) /* 60%                  */
-#define CAN_PARAM_SP_65P (1) /* 65%(1Mbpsg—p•s‰Â) */
+#define CAN_PARAM_SP_65P (1) /* 65%(1Mbpsæ™‚ä½¿ç”¨ä¸å¯) */
 #define CAN_PARAM_SP_70P (2) /* 70%                  */
-#define CAN_PARAM_SP_75P (3) /* 75%(1Mbpsg—p•s‰Â) */
+#define CAN_PARAM_SP_75P (3) /* 75%(1Mbpsæ™‚ä½¿ç”¨ä¸å¯) */
 #define CAN_PARAM_SP_80P (4) /* 80%                  */
-#define CAN_PARAM_SP_85P (5) /* 85%(1Mbpsg—p•s‰Â) */
+#define CAN_PARAM_SP_85P (5) /* 85%(1Mbpsæ™‚ä½¿ç”¨ä¸å¯) */
 
-/* g—pƒNƒƒbƒNŒ¹ */
-#define CAN_CLOCK_30MHZ (0) /* ƒNƒƒbƒN(30MHz) */
-#define CAN_CLOCK_8MHZ  (1) /* ƒNƒƒbƒN(8MHz)  */
+/* ä½¿ç”¨ã‚¯ãƒ­ãƒƒã‚¯æº */
+#define CAN_CLOCK_30MHZ (0) /* ã‚¯ãƒ­ãƒƒã‚¯(30MHz) */
+#define CAN_CLOCK_8MHZ  (1) /* ã‚¯ãƒ­ãƒƒã‚¯(8MHz)  */
   
-/* ƒXƒƒbƒg—LŒø/–³Œø */
-#define CAN_SLOT_DIS (0) /* ƒXƒƒbƒg–³Œø */
-#define CAN_SLOT_ENA (1) /* ƒXƒƒbƒg—LŒø */
+/* ã‚¹ãƒ­ãƒƒãƒˆæœ‰åŠ¹/ç„¡åŠ¹ */
+#define CAN_SLOT_DIS (0) /* ã‚¹ãƒ­ãƒƒãƒˆç„¡åŠ¹ */
+#define CAN_SLOT_ENA (1) /* ã‚¹ãƒ­ãƒƒãƒˆæœ‰åŠ¹ */
   
-/* ‘—MƒCƒxƒ“ƒg */
-#define CAN_EVENT_PERIODIC      (0) /* ’èŠú‘—M         */
-#define CAN_EVENT_EVENT         (1) /* ƒCƒxƒ“ƒg‘—M     */
-#define CAN_EVENT_EVENTPERIODIC (2) /* ƒCƒxƒ“ƒg’èŠú‘—M */
+/* é€ä¿¡ã‚¤ãƒ™ãƒ³ãƒˆ */
+#define CAN_EVENT_PERIODIC      (0) /* å®šæœŸé€ä¿¡         */
+#define CAN_EVENT_EVENT         (1) /* ã‚¤ãƒ™ãƒ³ãƒˆé€ä¿¡     */
+#define CAN_EVENT_EVENTPERIODIC (2) /* ã‚¤ãƒ™ãƒ³ãƒˆå®šæœŸé€ä¿¡ */
   
-/* IDƒtƒH[ƒ}ƒbƒg */
-#define CAN_ID_STD (0) /* •W€ID */
-#define CAN_ID_EXT (1) /* Šg’£ID */
+/* IDãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ */
+#define CAN_ID_STD (0) /* æ¨™æº–ID */
+#define CAN_ID_EXT (1) /* æ‹¡å¼µID */
   
-/* ƒtƒŒ[ƒ€í•Ê */
-#define CAN_RTR_DATA   (0) /* ƒf[ƒ^ƒtƒŒ[ƒ€   */
-#define CAN_RTR_REMOTE (1) /* ƒŠƒ‚[ƒgƒtƒŒ[ƒ€ */
+/* ãƒ•ãƒ¬ãƒ¼ãƒ ç¨®åˆ¥ */
+#define CAN_RTR_DATA   (0) /* ãƒ‡ãƒ¼ã‚¿ãƒ•ãƒ¬ãƒ¼ãƒ    */
+#define CAN_RTR_REMOTE (1) /* ãƒªãƒ¢ãƒ¼ãƒˆãƒ•ãƒ¬ãƒ¼ãƒ  */
   
-/* •ûŒü */
-#define CAN_DIR_RX (0) /* óM */
-#define CAN_DIR_TX (1) /* ‘—M */
+/* æ–¹å‘ */
+#define CAN_DIR_RX (0) /* å—ä¿¡ */
+#define CAN_DIR_TX (1) /* é€ä¿¡ */
 
-/* ƒGƒ‰[ */
-#define CAN_ERR_NONE  (0) /* ƒGƒ‰[‚È‚µ             */
-#define CAN_ERR_ACK   (1) /* AckƒGƒ‰[              */
-#define CAN_ERR_OLF   (2) /* ƒI[ƒo[ƒ[ƒhƒtƒŒ[ƒ€ */
-#define CAN_ERR_OTHER (3) /* ‚»‚Ì‘¼ƒGƒ‰[           */
+/* ã‚¨ãƒ©ãƒ¼ */
+#define CAN_ERR_NONE  (0) /* ã‚¨ãƒ©ãƒ¼ãªã—             */
+#define CAN_ERR_ACK   (1) /* Ackã‚¨ãƒ©ãƒ¼              */
+#define CAN_ERR_OLF   (2) /* ã‚ªãƒ¼ãƒãƒ¼ãƒ­ãƒ¼ãƒ‰ãƒ•ãƒ¬ãƒ¼ãƒ  */
+#define CAN_ERR_OTHER (3) /* ãã®ä»–ã‚¨ãƒ©ãƒ¼           */
   
-/* ƒoƒbƒtƒ@ƒI[ƒo[ */
-#define CAN_BUFOVER_FALSE (0) /* ƒoƒbƒtƒ@ƒI[ƒo[–³‚µ */
-#define CAN_BUFOVER_TRUE  (1) /* ƒoƒbƒtƒ@ƒI[ƒo[”­¶ */
+/* ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ¼ãƒãƒ¼ */
+#define CAN_BUFOVER_FALSE (0) /* ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ¼ãƒãƒ¼ç„¡ã— */
+#define CAN_BUFOVER_TRUE  (1) /* ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ¼ãƒãƒ¼ç™ºç”Ÿ */
 
-/* LEDİ’è */
+/* LEDè¨­å®š */
 #define CAN_LED_OFF (0) /* LED OFF */
 #define CAN_LED_ON  (1) /* LED ON  */
 
 
-/******************** \‘¢‘Ì’è‹` ********************/
+/******************** æ§‹é€ ä½“å®šç¾© ********************/
 #pragma pack (1)
 
-/* APIƒo[ƒWƒ‡ƒ“ */
+/* APIãƒãƒ¼ã‚¸ãƒ§ãƒ³ */
 typedef struct {
-    char APIVersion[32]; /* APIƒo[ƒWƒ‡ƒ“î•ñ */
+    char APIVersion[32]; /* APIãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ± */
 } StMPCANVersion;
 
-/* CAN‘—MƒtƒŒ[ƒ€ */
+/* CANé€ä¿¡ãƒ•ãƒ¬ãƒ¼ãƒ  */
 typedef struct {
     unsigned long Id;       /* ID             */
-    unsigned char IdFormat; /* IDƒtƒH[ƒ}ƒbƒg */
-    unsigned char Rtr;      /* ƒtƒŒ[ƒ€í•Ê   */
+    unsigned char IdFormat; /* IDãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆ */
+    unsigned char Rtr;      /* ãƒ•ãƒ¬ãƒ¼ãƒ ç¨®åˆ¥   */
     unsigned char Dlc;      /* DLC            */
-    unsigned char Reserved; /* —\–ñ—Ìˆæ       */
-    unsigned char Data[8];  /* ƒf[ƒ^         */
+    unsigned char Reserved; /* äºˆç´„é ˜åŸŸ       */
+    unsigned char Data[8];  /* ãƒ‡ãƒ¼ã‚¿         */
 } StMPCANFrame;
 
-/* ƒXƒƒbƒgî•ñ */
+/* ã‚¹ãƒ­ãƒƒãƒˆæƒ…å ± */
 typedef struct {
-    unsigned char  Enabled;     /* ƒXƒƒbƒg—LŒø/–³Œø */
-    unsigned char  EventKind;   /* ‘—MƒCƒxƒ“ƒg      */
-    unsigned short Delay;       /* ‘—MƒfƒBƒŒƒC      */
-    unsigned short Cycle;       /* ‘—MƒTƒCƒNƒ‹      */
-    unsigned short Offset;      /* ‘—MƒIƒtƒZƒbƒg    */
-    unsigned short Count;       /* ‘—M‰ñ”          */
-    unsigned char  Increment;   /* ƒCƒ“ƒNƒŠƒƒ“ƒg—L–³(b0:Data1`b7:Data8‘Î‰) */
-    unsigned char  Reserved;    /* —\–ñ—Ìˆæ          */
-    StMPCANFrame   Frame;       /* ƒtƒŒ[ƒ€î•ñ      */
+    unsigned char  Enabled;     /* ã‚¹ãƒ­ãƒƒãƒˆæœ‰åŠ¹/ç„¡åŠ¹ */
+    unsigned char  EventKind;   /* é€ä¿¡ã‚¤ãƒ™ãƒ³ãƒˆ      */
+    unsigned short Delay;       /* é€ä¿¡ãƒ‡ã‚£ãƒ¬ã‚¤      */
+    unsigned short Cycle;       /* é€ä¿¡ã‚µã‚¤ã‚¯ãƒ«      */
+    unsigned short Offset;      /* é€ä¿¡ã‚ªãƒ•ã‚»ãƒƒãƒˆ    */
+    unsigned short Count;       /* é€ä¿¡å›æ•°          */
+    unsigned char  Increment;   /* ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆæœ‰ç„¡(b0:Data1ï½b7:Data8å¯¾å¿œ) */
+    unsigned char  Reserved;    /* äºˆç´„é ˜åŸŸ          */
+    StMPCANFrame   Frame;       /* ãƒ•ãƒ¬ãƒ¼ãƒ æƒ…å ±      */
 } StMPCANSlot;
 
-/* ƒƒOƒf[ƒ^ */
+/* ãƒ­ã‚°ãƒ‡ãƒ¼ã‚¿ */
 typedef struct {
-    unsigned long  mSec;  /* ƒ~ƒŠ•b          */
-    unsigned short uSec;  /* ƒ}ƒCƒNƒ•b      */
-    unsigned char  Dir;   /* •ûŒü(‘—M/óM) */
-    unsigned char  Err;   /* ƒGƒ‰[          */
-    StMPCANFrame   Frame; /* ƒtƒŒ[ƒ€î•ñ    */
+    unsigned long  mSec;  /* ãƒŸãƒªç§’          */
+    unsigned short uSec;  /* ãƒã‚¤ã‚¯ãƒ­ç§’      */
+    unsigned char  Dir;   /* æ–¹å‘(é€ä¿¡/å—ä¿¡) */
+    unsigned char  Err;   /* ã‚¨ãƒ©ãƒ¼          */
+    StMPCANFrame   Frame; /* ãƒ•ãƒ¬ãƒ¼ãƒ æƒ…å ±    */
 } StMPCANLog;
 
 #pragma pack()
 
 
-/******************** ŠÖ”’è‹` ********************/
+/******************** é–¢æ•°å®šç¾© ********************/
 
-/* C++‚Ìê‡‚Ì‚İA–¼‘OCü—}§ */
+/* C++ã®å ´åˆã®ã¿ã€åå‰ä¿®é£¾æŠ‘åˆ¶ */
 #if defined(__cplusplus)
 extern "C" {
 #endif
 
-typedef int32_t ER; /* API–ß‚è’l */
+typedef int32_t ER; /* APIæˆ»ã‚Šå€¤ */
 
 #define DLL_EXPORT __declspec(dllexport)
 
